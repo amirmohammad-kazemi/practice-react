@@ -1,8 +1,10 @@
+import { useState } from "react";
+import fields from "../data/fields";
 import "./App.css";
 
-
 function App() {
-
+  const [category, setCategory] = useState("no-category");
+  const target = fields.find((ob) => ob.id === category);
 
   return (
     <>
@@ -12,42 +14,55 @@ function App() {
         </div>
         <div id="content">
           <div>
-            <select id="select-category">
-              <option value="-1">لطفا فیلد مورد نظر را انتخاب نمایید</option>
-              <option value="1">HTML</option>
-              <option value="2">CSS</option>
-              <option value="3">JAVASCRIPT</option>
-              <option value="4">REACT</option>
-              <option value="5">VUE.JS</option>
-              <option value="6">TYPESCRIPT</option>
+            <select
+              value={category}
+              id="select-category"
+              onChange={(e) => {
+                setCategory(e.target.value);
+              }}
+            >
+              <option value="no-category">
+                لطفا فیلد مورد نظر را انتخاب نمایید
+              </option>
+              <option value="Front-End">Front-End</option>
+              <option value="Back-End">Back-End</option>
+              <option value="Security">Security</option>
+              <option value="AI">AI</option>
             </select>
           </div>
 
-          <div>
-            <div class="selected-category-show">
-              <span> نقشه اختصاصی شما برای </span>
-              <span id="selected-roadmap-title"> </span>:
+          {category !== "no-category" && (
+            <div>
+              <div class="selected-category-show">
+                <span id="selected-roadmap-title">
+                  {fields.find((ob) => ob.id === category).title}
+                </span>
+                <span> نقشه اختصاصی شما برای </span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* <!-- is-empty className --> */}
           <div id="roadmap">
-            <div class="empty-list">
-              <p>در ابتدا لطفا حوزه مورد نظر خود را انتخاب فرمایید</p>
-            </div>
-
-            <article class="roadmap-item">
-              <span class="roadmap-step">1</span>
-              <img
-                src="./public/images/javascript.png"
-                class="technology-img"
-                alt=""
-              />
-              <div class="roadmap-content">
-                <h1 class="technology-name">Next.js</h1>
+            {category === "no-category" && (
+              <div class="empty-list">
+                <p>در ابتدا لطفا حوزه مورد نظر خود را انتخاب فرمایید</p>
               </div>
-              <div class="img-overlay"></div>
-            </article>
+            )}
+
+            {category !== "no-category" &&
+              target.technologies.map((ob) => {
+                return (
+                  <article class="roadmap-item">
+                    <span class="roadmap-step">{ob.step}</span>
+                    <img src={ob.image} class="technology-img" alt="" />
+                    <div class="roadmap-content">
+                      <h1 class="technology-name">{ob.name}</h1>
+                    </div>
+                    <div class="img-overlay"></div>
+                  </article>
+                );
+              })}
           </div>
         </div>
       </div>
