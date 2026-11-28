@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect , useState } from "react";
 import "./AddTodoModal.css";
 
 function AddTodoModal({ onClose, onAddTodo }) {
@@ -7,6 +7,16 @@ function AddTodoModal({ onClose, onAddTodo }) {
   const [desc, setDesc] = useState("");
 
   const [isImportant, setIsImportant] = useState(false);
+
+  const [error, setError] = useState(true);
+
+  useEffect(() => {
+    if (title.length > 5) {
+      setError(false);
+    } else {
+      setError(true);
+    }
+  }, [title]);
 
   return (
     <div id="modal-screen">
@@ -28,7 +38,7 @@ function AddTodoModal({ onClose, onAddTodo }) {
             placeholder="عنوان تسک را وارد نمائید ..."
             className="input-element title-input"
           />
-
+          {error && <p style={{color:"red" , fontSize:"12px"}}>نام کاربری کوتاه است </p>}
           <textarea
             value={desc}
             onChange={(e) => {
