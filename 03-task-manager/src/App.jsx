@@ -3,36 +3,50 @@ import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import Todo from "./components/Todo/Todo";
 import AddTodoModal from "./components/AddTodoModal/AddTodoModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [modalStatus, setModalStatus] = useState(false);
 
   const [todos, setTodos] = useState([]);
 
-  const [todoPageStatus, setTodoPageStatus] = useState("");
+  const [todoPageStatus, setTodoPageStatus] = useState("all");
 
-  function getTaskData(task) {
-    setTodos((prevTodos) => [
-      ...prevTodos,
-      {
-        id: Date.now(),
-        title: task.title,
-        desc: task.desc,
-        isImportant: task.isImportant,
-        isComplete: false,
-      },
-    ]);
+  useEffect(() => {
+    const localTodos = localStorage.getItem("todos");
 
-    setTodoPageStatus("all")
+    if (localTodos) {
+      setTodos(JSON.parse(localTodos));
+    }
+  }, []);
+
+  function addTodo(task) {
+    const newTask = {
+      id: Date.now(),
+      title: task.title,
+      desc: task.desc,
+      isImportant: task.isImportant,
+      isComplete: false,
+    };
+
+    setTodos([...todos, newTask]);
+
+    setTodoPageStatus("all");
+    localStorage.setItem("todos", JSON.stringify([...todos, newTask]));
   }
 
   function toggleTodoComplete(id) {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
+    setTodos((prevTodos) => {
+      const updatedTodo = prevTodos.map((todo) =>
         todo.id === id ? { ...todo, isComplete: !todo.isComplete } : todo,
-      ),
-    );
+      );
+
+      localStorage.setItem("todos",JSON.stringify(updatedTodo));
+
+      return updatedTodo;
+    });
+
+
   }
 
   return (
@@ -189,7 +203,7 @@ function App() {
       </main>
 
       {modalStatus && (
-        <AddTodoModal onClose={setModalStatus} onAddTodo={getTaskData} />
+        <AddTodoModal onClose={setModalStatus} onAddTodo={addTodo} />
       )}
 
       <Footer />
