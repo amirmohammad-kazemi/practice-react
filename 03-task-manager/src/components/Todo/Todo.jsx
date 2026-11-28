@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Todo({
   title,
@@ -6,7 +6,15 @@ function Todo({
   isImportant,
   isComplete,
   onToggleComplete,
+  onDeleteTodo,
 }) {
+  useEffect(() => {
+    console.log(`mounting ${title}`);
+
+    return () => {
+      console.log(`Unmounting ${title}`);
+    };
+  }, []);
   return (
     <div className="space-y-0.5">
       <article className="task-card">
@@ -19,31 +27,19 @@ function Todo({
 
         <div className="moderate">
           <div className="flex items-center **:min-w-max gap-2">
-            {isImportant && (
-              <span className="priority code-1">مهم</span>
-            )}
+            {isImportant && <span className="priority code-1">مهم</span>}
 
             {isComplete && (
-              <span className="status-label completed">
-                تکمیل شده
-              </span>
+              <span className="status-label completed">تکمیل شده</span>
             )}
           </div>
 
           <div className="moderate-btns">
-            <button
-              className="complete-task"
-              onClick={onToggleComplete}
-              disabled={isComplete}
-            >
+            <button className="complete-task" onClick={onToggleComplete}>
               <i className="fa-solid fa-circle-check"></i>
             </button>
 
-            <button
-              className="undone-btn"
-              onClick={onToggleComplete}
-              disabled={!isComplete}
-            >
+            <button className="undone-btn" onClick={onDeleteTodo}>
               <i className="fa-solid fa-xmark"></i>
             </button>
           </div>

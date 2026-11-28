@@ -18,6 +18,8 @@ function App() {
     if (localTodos) {
       setTodos(JSON.parse(localTodos));
     }
+
+
   }, []);
 
   function addTodo(task) {
@@ -35,18 +37,26 @@ function App() {
     localStorage.setItem("todos", JSON.stringify([...todos, newTask]));
   }
 
+  function deleteTodo(id) {
+    setTodos((prevTodos) => {
+      const filtered = prevTodos.filter((todo) => todo.id !== id);
+
+      localStorage.setItem("todos", JSON.stringify(filtered));
+
+      return filtered;
+    });
+  }
+
   function toggleTodoComplete(id) {
     setTodos((prevTodos) => {
       const updatedTodo = prevTodos.map((todo) =>
         todo.id === id ? { ...todo, isComplete: !todo.isComplete } : todo,
       );
 
-      localStorage.setItem("todos",JSON.stringify(updatedTodo));
+      localStorage.setItem("todos", JSON.stringify(updatedTodo));
 
       return updatedTodo;
     });
-
-
   }
 
   return (
@@ -138,6 +148,7 @@ function App() {
                         isImportant={todo.isImportant}
                         isComplete={todo.isComplete}
                         onToggleComplete={() => toggleTodoComplete(todo.id)}
+                        onDeleteTodo={() => deleteTodo(todo.id)}
                       />
                     );
                   })}
@@ -155,6 +166,7 @@ function App() {
                         isImportant={todo.isImportant}
                         isComplete={todo.isComplete}
                         onToggleComplete={() => toggleTodoComplete(todo.id)}
+                        onDeleteTodo={() => deleteTodo(todo.id)}
                       />
                     );
                   })}
@@ -175,6 +187,7 @@ function App() {
                       isImportant={todo.isImportant}
                       isComplete={todo.isComplete}
                       onToggleComplete={() => toggleTodoComplete(todo.id)}
+                      onDeleteTodo={() => deleteTodo(todo.id)}
                     />
                   );
                 })}
@@ -194,6 +207,7 @@ function App() {
                       isImportant={todo.isImportant}
                       isComplete={todo.isComplete}
                       onToggleComplete={() => toggleTodoComplete(todo.id)}
+                      onDeleteTodo={() => deleteTodo(todo.id)}
                     />
                   );
                 })}
